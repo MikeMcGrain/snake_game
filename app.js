@@ -1,13 +1,11 @@
-let canvas
-let canvasContext
-let snakeX = 20
-let snakeY = 400
+let canvas = document.getElementById("canvas")
+let canvasContext = canvas.getContext("2d")
+
+let snakeX = canvas.width / 2
+let snakeY = canvas.height / 2
 let snakeSpeed = 10
 
 window.onload = function() {
-  canvas = document.getElementById("canvas")
-  canvasContext = canvas.getContext("2d")
-
   let framesPerSec = 100
   setInterval(() => {
     checkSnakePos()
@@ -21,9 +19,15 @@ window.onload = function() {
 }
 
 function checkSnakePos() {
-  if ((snakeX <= 0 || snakeX >= canvas.width-1) || (snakeY <= 0 || snakeY >= canvas.height-1)) {
+  if (
+    snakeX <= 0 ||
+    snakeX >= canvas.width - 1 ||
+    snakeY <= 0 ||
+    snakeY >= canvas.height - 1
+  ) {
     alert(`x:${snakeX}, y:${snakeY} - Game Over`)
-    return
+    snakeX = canvas.width / 2
+    snakeY = canvas.height / 2
   }
 }
 
@@ -37,16 +41,16 @@ function draw() {
 
 function moveSnake(keyNum) {
   switch (keyNum) {
-    case 37: // left-key 
+    case 37: // left-key
       snakeX -= snakeSpeed
       break
-    case 38: // up-key 
+    case 38: // up-key
       snakeY -= snakeSpeed
       break
-    case 39:// right-key
-     snakeX += snakeSpeed
-     break
-    case 40: // down-key 
+    case 39: // right-key
+      snakeX += snakeSpeed
+      break
+    case 40: // down-key
       snakeY += snakeSpeed
       break
   }
