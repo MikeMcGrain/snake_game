@@ -1,22 +1,20 @@
-let canvas = document.getElementById("canvas")
-let canvasContext = canvas.getContext("2d")
+const canvas = document.getElementById("canvas")
+const canvasContext = canvas.getContext("2d")
 
 let snakeX = canvas.width / 2
 let snakeY = canvas.height / 2
-let snakeSpeed = 10
+const snakeSpeed = 10
 
-window.onload = function() {
-  let framesPerSec = 100
+window.addEventListener("load", function() {
+  const framesPerSec = 100
   setInterval(() => {
     checkSnakePos()
     draw()
     moveSnake()
   }, 1000 / framesPerSec)
 
-  document.addEventListener("keydown", function(e) {
-    moveSnake(e.keyCode)
-  })
-}
+  document.addEventListener("keydown", function(e) {moveSnake(e.keyCode)})
+})
 
 function checkSnakePos() {
   if (
