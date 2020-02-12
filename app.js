@@ -1,14 +1,18 @@
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext("2d")
 
+const mouseSize = 15
+let mouseX
+let mouseY
+
 const snakeSize = 20
 let snakeX = canvas.width / 2
 let snakeY = canvas.height / 2
-let snakeSpeed = 2
+let snakeSpeed = 5
 let snakeDirection = 0
 
 window.addEventListener("load", function() {
-  const framesPerSec = 100
+  const framesPerSec = 75
   setInterval(() => {
     checkSnakePos()
     draw()
@@ -16,8 +20,14 @@ window.addEventListener("load", function() {
   }, 1000 / framesPerSec)
 
   document.addEventListener("keydown", function(e) {
-    snakeDirection = e.keyCode
-    moveSnake()
+    if (
+      e.keyCode == 37 ||
+      e.keyCode == 38 ||
+      e.keyCode == 39 ||
+      e.keyCode == 40
+    ) {
+      snakeDirection = e.keyCode
+    }
   })
 })
 
@@ -41,6 +51,9 @@ function draw() {
 
   // draw snake
   drawRect(snakeX, snakeY, snakeSize, snakeSize, "green")
+
+  // draw mouse
+  drawRect(mouseX, mouseY, mouseSize, mouseSize, "gray")
 }
 
 function drawRect(leftX, topY, width, height, color) {
