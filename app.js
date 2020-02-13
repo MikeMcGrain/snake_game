@@ -1,18 +1,23 @@
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext("2d")
 
-const mouseSize = 20
-let mouseX = getRandomNumber(0, canvas.width-mouseSize)
-let mouseY = getRandomNumber(0, canvas.height-mouseSize)
+
 
 const snakeSize = 20
 let snakeX = canvas.width / 2
 let snakeY = canvas.height / 2
-let snakeSpeed = 4
+let snakeSpeed = 20
 let snakeDirection = 0
 
+const mouseSize = 20
+let mouseX = getRandomNumber(0, canvas.width-mouseSize)
+let mouseY = getRandomNumber(0, canvas.height-mouseSize)
+
+let score = 0
+document.getElementById("score").innerText = `Score: ${score}`
+
 window.addEventListener("load", function() {
-  const framesPerSec = 75
+  const framesPerSec = 15
   setInterval(() => {
     checkSnakePos()
     draw()
@@ -27,11 +32,21 @@ window.addEventListener("load", function() {
 })
 
 function checkSnakePos() {
-  if ( snakeX < 0 || snakeX >= canvas.width - snakeSize || snakeY < 0 || snakeY >= canvas.height - snakeSize) {
-    alert(`x:${snakeX}, y:${snakeY} - Game Over`)
+  if (snakeX == mouseX && snakeY == mouseY) {
+    mouseX = getRandomNumber(0, canvas.width-mouseSize)
+    mouseY = getRandomNumber(0, canvas.height-mouseSize)
+    document.getElementById("score").innerText = `Score: ${++score}`
+  }
+
+  if (snakeX < 0 || snakeX >= (canvas.width) || snakeY < 0 || snakeY >= (canvas.height)) {
+    alert(`Game Over -- Final Score: ${score}`)
     snakeX = canvas.width / 2
     snakeY = canvas.height / 2
+    mouseX = getRandomNumber(0, canvas.width-mouseSize)
+    mouseY = getRandomNumber(0, canvas.height-mouseSize)
     snakeDirection = 0
+    score = 0
+    document.getElementById("score").innerText = `Score: ${score}`
   }
 }
 
@@ -81,8 +96,5 @@ function moveSnake() {
 }
 
 function getRandomNumber(min, max) {
-  // generate random numbers for mouseX and mouseY coordinates
-  // mouseX must be >= 0 && <= 800 and !== snakeX
-  // mouseY must be >= 0 && <= 1200 and !== snakeY
-  return Math.random() * (max - min) + min;
+  return Math.round((Math.random()*(max-min)+min)/20)*20
 }
