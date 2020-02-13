@@ -1,8 +1,6 @@
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext("2d")
 
-
-
 const snakeSize = 20
 let snakeX = canvas.width / 2
 let snakeY = canvas.height / 2
