@@ -1,14 +1,14 @@
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext("2d")
 
-const mouseSize = 15
-let mouseX
-let mouseY
+const mouseSize = 20
+let mouseX = getRandomNumber(0, canvas.width-mouseSize)
+let mouseY = getRandomNumber(0, canvas.height-mouseSize)
 
 const snakeSize = 20
 let snakeX = canvas.width / 2
 let snakeY = canvas.height / 2
-let snakeSpeed = 5
+let snakeSpeed = 4
 let snakeDirection = 0
 
 window.addEventListener("load", function() {
@@ -20,24 +20,14 @@ window.addEventListener("load", function() {
   }, 1000 / framesPerSec)
 
   document.addEventListener("keydown", function(e) {
-    if (
-      e.keyCode == 37 ||
-      e.keyCode == 38 ||
-      e.keyCode == 39 ||
-      e.keyCode == 40
-    ) {
+    if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
       snakeDirection = e.keyCode
     }
   })
 })
 
 function checkSnakePos() {
-  if (
-    snakeX < 0 ||
-    snakeX >= canvas.width - snakeSize ||
-    snakeY < 0 ||
-    snakeY >= canvas.height - snakeSize
-  ) {
+  if ( snakeX < 0 || snakeX >= canvas.width - snakeSize || snakeY < 0 || snakeY >= canvas.height - snakeSize) {
     alert(`x:${snakeX}, y:${snakeY} - Game Over`)
     snakeX = canvas.width / 2
     snakeY = canvas.height / 2
@@ -88,4 +78,11 @@ function moveSnake() {
       } while (keyNum == 40)
       break
   }
+}
+
+function getRandomNumber(min, max) {
+  // generate random numbers for mouseX and mouseY coordinates
+  // mouseX must be >= 0 && <= 800 and !== snakeX
+  // mouseY must be >= 0 && <= 1200 and !== snakeY
+  return Math.random() * (max - min) + min;
 }
