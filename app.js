@@ -4,15 +4,15 @@ const canvasContext = canvas.getContext("2d")
 let snake = {
   size: 25,
   speed: 25,
-  x: canvas.width / 2,
+  x: canvas.width / 3,
   y: canvas.height / 2,
   direction: 0
 }
 
 let mouse = {
   size: 25,
-  x: 200,
-  y: 200
+  x: canvas.width / 3 * 2,
+  y: canvas.height / 2
 }
 
 let score = 0
@@ -54,8 +54,8 @@ function drawRectangle(leftX, topY, width, height, color) {
 
 function checkSnakePosition() {
   if (snake.x == mouse.x && snake.y == mouse.y) {
-    mouse.x = getRandomNumber(0, canvas.width-mouse.size)
-    mouse.y = getRandomNumber(0, canvas.height-mouse.size)
+    resetMouse()
+    
     document.getElementById("score").innerText = `Score: ${++score}`
   }
 
@@ -63,12 +63,16 @@ function checkSnakePosition() {
     alert(`Game Over -- Final Score: ${score}`)
     snake.x = canvas.width / 2
     snake.y = canvas.height / 2
-    mouse.x = getRandomNumber(0, canvas.width-mouse.size)
-    mouse.y = getRandomNumber(0, canvas.height-mouse.size)
+    resetMouse()
     snake.direction = 0
     score = 0
     document.getElementById("score").innerText = `Score: ${score}`
   }
+}
+
+function resetMouse() {
+  mouse.x = getRandomNumber(0, canvas.width-mouse.size)
+  mouse.y = getRandomNumber(0, canvas.height-mouse.size)
 }
 
 function getRandomNumber(min, max) {
