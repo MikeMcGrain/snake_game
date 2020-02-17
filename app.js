@@ -6,17 +6,22 @@ const UP = "ArrowUp"
 const RIGHT = "ArrowRight"
 const DOWN = "ArrowDown"
 
+const GRID_UNIT = 25
+
 let score = 0
 document.getElementById("score").innerText = `Score: ${score}`
 
-let snake = {
+const snake = {
   size: 25,
-  speed: 25,
   direction: null,
-  body: [{ x: canvas.width / 3, y: canvas.height / 2 }]
+  body: [
+    {x: canvas.width/3, y: canvas.height/2}, 
+    {x: canvas.width/3-GRID_UNIT, y: canvas.height/2}, 
+    {x: canvas.width/3-GRID_UNIT*2, y: canvas.height/2}
+  ]
 }
 
-let mouse = {
+const mouse = {
   size: 25,
   x: (canvas.width / 3) * 2,
   y: canvas.height / 2
@@ -28,15 +33,25 @@ window.addEventListener("load", function() {
     drawCanvas()
     drawMouse()
     moveSnake()
-    drawSnake()
+    drawSnake() 
     checkSnakePosition()
   }, 1000 / FPS)
 
   document.addEventListener("keydown", function(e) {
-    if (e.code == LEFT && snake.direction != RIGHT) {snake.direction = LEFT} 
-    else if (e.code == UP && snake.direction != DOWN) {snake.direction = UP} 
-    else if (e.code == RIGHT && snake.direction != LEFT) {snake.direction = RIGHT} 
-    else if (e.code == DOWN && snake.direction != UP) {snake.direction = DOWN}
+    switch (true) {
+      case e.code == LEFT && snake.direction != RIGHT: 
+        snake.direction = LEFT
+        break 
+      case e.code == UP && snake.direction != DOWN:
+        snake.direction = UP
+        break
+      case e.code == RIGHT && snake.direction != LEFT:
+        snake.direction = RIGHT
+        break
+      case e.code == DOWN && snake.direction != UP:
+        snake.direction = DOWN
+        break
+    }
   })
 })
 
@@ -49,31 +64,19 @@ function drawMouse() {
 }
 
 function moveSnake() {
+  const copyOfSnakeBody = snake.body.map(bodyPart => {
+    return {x: bodyPart.x, y: bodyPart.y}
+  })
+
   switch (snake.direction) {
-    case LEFT:
-      do {
-        snake.body[0].x -= snake.speed
-        break
-      } while (snake.direction == LEFT)
-      break
-    case UP:
-      do {
-        snake.body[0].y -= snake.speed
-        break
-      } while (snake.direction == UP)
-      break
-    case RIGHT:
-      do {
-        snake.body[0].x += snake.speed
-        break
-      } while (snake.direction == RIGHT)
-      break
-    case DOWN:
-      do {
-        snake.body[0].y += snake.speed
-        break
-      } while (snake.direction == DOWN)
-      break
+    case RIGHT: snake.body[0].x += 25; break 
+    case LEFT: snake.body[0].x -= 25; break
+    case UP: snake.body[0].y -= 25; break 
+    case DOWN: snake.body[0].y += 25; break
+  }
+
+  for (i=1; i<snake.body.length; i++) {
+    snake.body[i] = {x: copyOfSnakeBody[i-1].x, y: copyOfSnakeBody[i-1].y}  
   }
 }
 
@@ -86,12 +89,7 @@ function drawSnake() {
 
 function checkSnakePosition() {
   // snake touching canvas boundary?
-  if (
-    snake.body[0].x < 0 ||
-    snake.body[0].x >= canvas.width ||
-    snake.body[0].y < 0 ||
-    snake.body[0].y >= canvas.height
-  ) {
+  if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
     alert(`Game Over -- Final Score: ${score}`)
     snake.body[0].x = canvas.width / 2
     snake.body[0].y = canvas.height / 2
@@ -106,21 +104,23 @@ function checkSnakePosition() {
     resetMouse()
     document.getElementById("score").innerText = `Score: ${++score}`
 
-    // switch (snake.direction) {
-    //   case LEFT:
-    //     snake.body.push( {x: snake.body[snake.body.length-1].x + snake.size, y: snake.body[snake.body.length-1].y} )
-    //     break
-    //   case UP:
-    //     snake.body.push( {x: snake.body[snake.body.length-1].x, y: snake.body[snake.body.length-1].y + snake.size} )
-    //     break
-    //   case RIGHT:
-    //     snake.body.push( {x: snake.body[snake.body.length-1].x - snake.size, y: snake.body[snake.body.length-1].y} )
-    //     break
-    //   case DOWN:
-    //     snake.body.push( {x: snake.body[snake.body.length-1].x + snake.size, y: snake.body[snake.body.length-1].y - snake.size} )
-    //     break
-    // }
+    switch (snake.direction) {
+      case LEFT:
+        snake.body.push({x: snake.body[snake.body.length-1].x + snake.size, y: snake.body[snake.body.length-1].y})
+        break
+      case UP:
+        snake.body.push({x: snake.body[snake.body.length-1].x, y: snake.body[snake.body.length-1].y + snake.size})
+        break
+      case RIGHT:
+        snake.body.push({x: snake.body[snake.body.length-1].x - snake.size, y: snake.body[snake.body.length-1].y})
+        break
+      case DOWN:
+        snake.body.push({x: snake.body[snake.body.length-1].x, y: snake.body[snake.body.length-1].y - snake.size})
+        break
+    }
   }
+  // snake touching snake?
+  
 }
 
 function drawRectangle(x, y, width, height, color) {
@@ -135,6 +135,6 @@ function resetMouse() {
 
 function getRandomNumber(min, max) {
   return (
-    Math.round((Math.random() * (max - min) + min) / snake.speed) * snake.speed
+    Math.round((Math.random() * (max - min) + min) / GRID_UNIT) * GRID_UNIT
   )
 }
