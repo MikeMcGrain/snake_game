@@ -1,12 +1,12 @@
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext("2d")
 
+const GRID_UNIT = 25
+
 const LEFT = "ArrowLeft"
 const UP = "ArrowUp"
 const RIGHT = "ArrowRight"
 const DOWN = "ArrowDown"
-
-const GRID_UNIT = 25
 
 let score = 0
 document.getElementById("score").innerText = `Score: ${score}`
@@ -15,13 +15,16 @@ const snake = {
   size: 25,
   direction: null,
   body: [
-    {x: canvas.width/3, y: canvas.height/2}
+    {x: canvas.width/3, y: canvas.height/2},
+    {x: canvas.width/3-GRID_UNIT, y: canvas.height/2},
+    {x: canvas.width/3-GRID_UNIT*2, y: canvas.height/2},
+    {x: canvas.width/3-GRID_UNIT*3, y: canvas.height/2}
   ]
 }
 
 const mouse = {
   size: 25,
-  x: (canvas.width / 3) * 2,
+  x: canvas.width / 3 * 2,
   y: canvas.height / 2
 }
 
@@ -71,6 +74,7 @@ function moveSnake() {
     case LEFT: snake.body[0].x -= 25; break
     case UP: snake.body[0].y -= 25; break 
     case DOWN: snake.body[0].y += 25; break
+    default: return
   }
 
   for (i=1; i<snake.body.length; i++) {
@@ -88,27 +92,15 @@ function drawSnake() {
 function checkSnakePosition() {
   // snake touching canvas boundary?
   if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
-    snake.body = [
-      {x: canvas.width/2, y: canvas.height/2}
-    ]
-    snake.direction = null
-    resetMouse()
     alert(`SNAKE ON BOUNDARY --Game Over -- Final Score: ${score}`)
-    score = 0
-    document.getElementById("score").innerText = `Score: ${score}`
+    resetGame()
   }
 
   // snake head touching body?
   for (i=1; i<snake.body.length; i++) {
-    if (snake.body[0].x == snake.body[i].x  && snake.body[0].y == snake.body[i].y) {
+    if (snake.body[0].x == snake.body[i].x && snake.body[0].y == snake.body[i].y) {
       alert(`SNAKE ON SNAKE -- Game Over -- Final Score: ${score}`)
-      snake.body = [
-        {x: canvas.width/2, y: canvas.height/2}
-      ]
-      snake.direction = null
-      resetMouse()
-      score = 0
-      document.getElementById("score").innerText = `Score: ${score}`
+      resetGame()
     }
   }
 
@@ -117,18 +109,21 @@ function checkSnakePosition() {
     resetMouse()
     document.getElementById("score").innerText = `Score: ${++score}`
 
+    const xOfCurrentTail = snake.body[snake.body.length-1].x
+    const yOfCurrentTail = snake.body[snake.body.length-1].y
+
     switch (snake.direction) {
       case LEFT:
-        snake.body.push({x: snake.body[snake.body.length-1].x + snake.size, y: snake.body[snake.body.length-1].y})
+        snake.body.push({x: xOfCurrentTail + snake.size, y: yOfCurrentTail})
         break
       case UP:
-        snake.body.push({x: snake.body[snake.body.length-1].x, y: snake.body[snake.body.length-1].y + snake.size})
+        snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail + snake.size})
         break
       case RIGHT:
-        snake.body.push({x: snake.body[snake.body.length-1].x - snake.size, y: snake.body[snake.body.length-1].y})
+        snake.body.push({x: xOfCurrentTail - snake.size, y: yOfCurrentTail})
         break
       case DOWN:
-        snake.body.push({x: snake.body[snake.body.length-1].x, y: snake.body[snake.body.length-1].y - snake.size})
+        snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail - snake.size})
         break
     }
   }
@@ -140,12 +135,26 @@ function drawRectangle(x, y, width, height, color) {
 }
 
 function resetMouse() {
-  mouse.x = getRandomNumber(0, canvas.width - mouse.size)
-  mouse.y = getRandomNumber(0, canvas.height - mouse.size)
+  let mouseX = Math.round((Math.random() * (canvas.width-mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
+  let mouseY = Math.round((Math.random() * (canvas.height-mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
+
+  snake.body.forEach((bodyPart, index) => {
+    if (mouseX == snake.body[index].x && mouseY == snake.body[index].y) {resetMouse()} 
+    else {index++}
+  })
+  mouse.x = mouseX
+  mouse.y = mouseY
 }
 
-function getRandomNumber(min, max) {
-  return (
-    Math.round((Math.random() * (max - min) + min) / GRID_UNIT) * GRID_UNIT
-  )
+function resetGame() {
+  snake.body = [
+    {x: canvas.width/3, y: canvas.height/2},
+    {x: canvas.width/3-GRID_UNIT, y: canvas.height/2},
+    {x: canvas.width/3-GRID_UNIT*2, y: canvas.height/2},
+    {x: canvas.width/3-GRID_UNIT*3, y: canvas.height/2}
+  ]
+  snake.direction = null
+  resetMouse()
+  score = 0
+  document.getElementById("score").innerText = `Score: ${score}`
 }
