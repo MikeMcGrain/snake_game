@@ -28,6 +28,9 @@ const mouse = {
   y: canvas.height / 2
 }
 
+let mouseImage = new Image()
+mouseImage.src = "images/rodent.svg"
+
 window.addEventListener("load", function() {
   const FPS = 15
   setInterval(() => {
@@ -57,11 +60,12 @@ window.addEventListener("load", function() {
 })
 
 function drawCanvas() {
-  drawRectangle(0, 0, canvas.width, canvas.height, "black")
+  drawRectangle(0, 0, canvas.width, canvas.height, "green")
 }
 
 function drawMouse() {
-  drawRectangle(mouse.x, mouse.y, mouse.size, mouse.size, "gray")
+  canvasContext.drawImage(mouseImage, mouse.x, mouse.y, mouse.size, mouse.size)
+  // drawRectangle(mouse.x, mouse.y, mouse.size, mouse.size, "gray")
 }
 
 function moveSnake() {
@@ -84,7 +88,7 @@ function moveSnake() {
 
 function drawSnake() {
   snake.body.forEach((bodyPart, index) => {
-    drawRectangle(snake.body[index].x, snake.body[index].y, snake.size, snake.size, "green")
+    drawRectangle(snake.body[index].x, snake.body[index].y, snake.size, snake.size, "#00d200")
     index++
   })
 }
@@ -139,8 +143,10 @@ function resetMouse() {
   let mouseY = Math.round((Math.random() * (canvas.height-mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
 
   snake.body.forEach((bodyPart, index) => {
-    if (mouseX == snake.body[index].x && mouseY == snake.body[index].y) {resetMouse()} 
-    else {index++}
+    if (mouseX == snake.body[index].x && mouseY == snake.body[index].y) {
+      resetMouse()
+    } else {
+      index++}
   })
   mouse.x = mouseX
   mouse.y = mouseY
