@@ -1,5 +1,11 @@
 const canvas = document.getElementById("canvas")
+canvas.width = 1200
+canvas.height = 800
+
 const canvasContext = canvas.getContext("2d")
+
+let canvasBackground = new Image()
+canvasBackground.src = "images/grass-background2.jpg"
 
 const GRID_UNIT = 25
 
@@ -60,12 +66,12 @@ window.addEventListener("load", function() {
 })
 
 function drawCanvas() {
-  drawRectangle(0, 0, canvas.width, canvas.height, "green")
+  canvasContext.drawImage(canvasBackground, 0, 0, canvas.width, canvas.height)
+  // drawRectangle(0, 0, canvas.width, canvas.height, "green")
 }
 
 function drawMouse() {
   canvasContext.drawImage(mouseImage, mouse.x, mouse.y, mouse.size, mouse.size)
-  // drawRectangle(mouse.x, mouse.y, mouse.size, mouse.size, "gray")
 }
 
 function moveSnake() {

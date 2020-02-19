@@ -1,3 +1,26 @@
 body {
-    text-align: center;
+  text-align: center;
+  background-color: black;
+  color: #00d200;
+}
+
+@font-face {
+  font-family: serpentFont;
+  src: url(fonts/serpent.ttf);
+}
+
+@font-face {
+  font-family: snakeFont;
+  src: url(fonts/snake.ttf);
+}
+
+@font-face {
+    font-family: snake-eyes-font;
+    src: url(fonts/snake-eyes.ttf);
+  }
+
+p {
+  font-family: snake-eyes-font;
+  font-size: 10vw;
+  margin: 0;
 }
