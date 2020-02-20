@@ -5,16 +5,6 @@ body {
 }
 
 @font-face {
-  font-family: serpentFont;
-  src: url(fonts/serpent.ttf);
-}
-
-@font-face {
-  font-family: snakeFont;
-  src: url(fonts/snake.ttf);
-}
-
-@font-face {
     font-family: snake-eyes-font;
     src: url(fonts/snake-eyes.ttf);
   }

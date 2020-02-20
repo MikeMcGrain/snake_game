@@ -1,10 +1,8 @@
 const canvas = document.getElementById("canvas")
 canvas.width = 1200
 canvas.height = 800
-
 const canvasContext = canvas.getContext("2d")
-
-let canvasBackground = new Image()
+const canvasBackground = new Image()
 canvasBackground.src = "images/grass-background2.jpg"
 
 const GRID_UNIT = 25
@@ -13,9 +11,6 @@ const LEFT = "ArrowLeft"
 const UP = "ArrowUp"
 const RIGHT = "ArrowRight"
 const DOWN = "ArrowDown"
-
-let score = 0
-document.getElementById("score").innerText = `Score: ${score}`
 
 const snake = {
   size: 25,
@@ -34,8 +29,11 @@ const mouse = {
   y: canvas.height / 2
 }
 
-let mouseImage = new Image()
+const mouseImage = new Image()
 mouseImage.src = "images/rodent.svg"
+
+let score = 0
+document.getElementById("score").innerText = `Score: ${score}`
 
 window.addEventListener("load", function() {
   const FPS = 15
