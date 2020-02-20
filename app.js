@@ -22,7 +22,7 @@ const snake = {
 
 const mouse = {
   size: 25,
-  x: canvas.width / 3 * 2,
+  x: (canvas.width / 3) * 2,
   y: canvas.height / 2
 }
 const mouseImage = new Image()
@@ -34,7 +34,7 @@ window.addEventListener("load", function() {
     drawCanvas()
     drawMouse()
     moveSnake()
-    drawSnake() 
+    drawSnake()
     checkSnakePosition()
   }, 1000 / FPS)
 
@@ -42,9 +42,9 @@ window.addEventListener("load", function() {
     e.preventDefault()
     window.scrollTo(0, 200)
     switch (true) {
-      case e.code == LEFT && snake.direction != RIGHT: 
+      case e.code == LEFT && snake.direction != RIGHT:
         snake.direction = LEFT
-        break 
+        break
       case e.code == UP && snake.direction != DOWN:
         snake.direction = UP
         break
@@ -68,30 +68,26 @@ function drawMouse() {
 
 function moveSnake() {
   const copyOfSnakeBody = snake.body.map(bodyPart => {
-    return {x: bodyPart.x, y: bodyPart.y}
+    return { x: bodyPart.x, y: bodyPart.y }
   })
 
   switch (snake.direction) {
-    case RIGHT: snake.body[0].x += 25; break 
+    case RIGHT: snake.body[0].x += 25; break
     case LEFT: snake.body[0].x -= 25; break
-    case UP: snake.body[0].y -= 25; break 
+    case UP: snake.body[0].y -= 25; break
     case DOWN: snake.body[0].y += 25; break
     default: return
   }
 
-  for (i=1; i<snake.body.length; i++) {
-    snake.body[i] = {x: copyOfSnakeBody[i-1].x, y: copyOfSnakeBody[i-1].y}  
+  for (i = 1; i < snake.body.length; i++) {
+    snake.body[i] = { x: copyOfSnakeBody[i - 1].x, y: copyOfSnakeBody[i - 1].y }
   }
 }
 
 function drawSnake() {
   snake.body.forEach((bodyPart, index) => {
     if (index == 0) {
-      // drawCircle(snake.body[index].x+12, snake.body[index].y+12)
-      canvasContext.beginPath()
-      canvasContext.arc(snake.body[index].x+12, snake.body[index].y+12, GRID_UNIT, 0, 2 * Math.PI)
-      canvasContext.fillStyle = "#00d200"
-      canvasContext.fill()
+      drawCircle(snake.body[index].x, snake.body[index].y)
     } else {
       drawRectangle(snake.body[index].x, snake.body[index].y, snake.size, snake.size, "#00d200")
     }
@@ -107,7 +103,7 @@ function checkSnakePosition() {
   }
 
   // snake on snake?
-  for (i=1; i<snake.body.length; i++) {
+  for (i = 1; i < snake.body.length; i++) {
     if (snake.body[0].x == snake.body[i].x && snake.body[0].y == snake.body[i].y) {
       alert(`SNAKE ON SNAKE -- Game Over -- Final Score: ${score}`)
       resetGame()
@@ -119,22 +115,14 @@ function checkSnakePosition() {
     resetMouse()
     document.getElementById("score").innerText = `Score: ${++score}`
 
-    const xOfCurrentTail = snake.body[snake.body.length-1].x
-    const yOfCurrentTail = snake.body[snake.body.length-1].y
+    const xOfCurrentTail = snake.body[snake.body.length - 1].x
+    const yOfCurrentTail = snake.body[snake.body.length - 1].y
 
     switch (snake.direction) {
-      case LEFT:
-        snake.body.push({x: xOfCurrentTail + snake.size, y: yOfCurrentTail})
-        break
-      case UP:
-        snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail + snake.size})
-        break
-      case RIGHT:
-        snake.body.push({x: xOfCurrentTail - snake.size, y: yOfCurrentTail})
-        break
-      case DOWN:
-        snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail - snake.size})
-        break
+      case LEFT: snake.body.push({x: xOfCurrentTail + snake.size, y: yOfCurrentTail}); break
+      case UP: snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail + snake.size}); break
+      case RIGHT: snake.body.push({x: xOfCurrentTail - snake.size, y: yOfCurrentTail}); break
+      case DOWN: snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail - snake.size}); break
     }
   }
 }
@@ -144,22 +132,23 @@ function drawRectangle(x, y, width, height, color) {
   canvasContext.fillRect(x, y, width, height, color)
 }
 
-// function drawCirle(x, y) {
-//   canvasContext.beginPath()
-//   canvasContext.arc(x, y, GRID_UNIT, 0, 2 * Math.PI)
-//   canvasContext.fillStyle = "#00d200"
-//   canvasContext.fill()
-// }
+function drawCircle(x, y) {
+  canvasContext.beginPath()
+  canvasContext.arc(x + 12, y + 12, GRID_UNIT, 0, 2 * Math.PI)
+  canvasContext.fillStyle = "#00d200"
+  canvasContext.fill()
+}
 
 function resetMouse() {
-  let mouseX = Math.round((Math.random() * (canvas.width-mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
-  let mouseY = Math.round((Math.random() * (canvas.height-mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
+  let mouseX = Math.round((Math.random() * (canvas.width - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
+  let mouseY = Math.round((Math.random() * (canvas.height - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
 
   snake.body.forEach((bodyPart, index) => {
     if (mouseX == snake.body[index].x && mouseY == snake.body[index].y) {
       resetMouse()
     } else {
-      index++}
+      index++
+    }
   })
   mouse.x = mouseX
   mouse.y = mouseY
@@ -175,8 +164,11 @@ function resetGame() {
 
 function makeStartingBody(length) {
   arrayForSnakeBody = []
-  for (i=1; i<length; i++) {
-    arrayForSnakeBody.push({x: canvas.width/3-GRID_UNIT*i, y: canvas.height/2}) 
+  for (i = 1; i < length; i++) {
+    arrayForSnakeBody.push({
+      x: canvas.width / 3 - GRID_UNIT * i,
+      y: canvas.height / 2
+    })
   }
   return arrayForSnakeBody
 }
