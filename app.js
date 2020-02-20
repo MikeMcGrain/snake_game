@@ -1,3 +1,6 @@
+let score = 0
+document.getElementById("score").innerText = `Score: ${score}`
+
 const canvas = document.getElementById("canvas")
 canvas.width = 1200
 canvas.height = 800
@@ -6,7 +9,6 @@ const canvasBackground = new Image()
 canvasBackground.src = "images/grass-background2.jpg"
 
 const GRID_UNIT = 25
-
 const LEFT = "ArrowLeft"
 const UP = "ArrowUp"
 const RIGHT = "ArrowRight"
@@ -15,12 +17,7 @@ const DOWN = "ArrowDown"
 const snake = {
   size: 25,
   direction: null,
-  body: [
-    {x: canvas.width/3, y: canvas.height/2},
-    {x: canvas.width/3-GRID_UNIT, y: canvas.height/2},
-    {x: canvas.width/3-GRID_UNIT*2, y: canvas.height/2},
-    {x: canvas.width/3-GRID_UNIT*3, y: canvas.height/2}
-  ]
+  body: makeStartingBody(10)
 }
 
 const mouse = {
@@ -28,15 +25,11 @@ const mouse = {
   x: canvas.width / 3 * 2,
   y: canvas.height / 2
 }
-
 const mouseImage = new Image()
 mouseImage.src = "images/rodent.svg"
 
-let score = 0
-document.getElementById("score").innerText = `Score: ${score}`
-
 window.addEventListener("load", function() {
-  const FPS = 15
+  const FPS = 13
   setInterval(() => {
     drawCanvas()
     drawMouse()
@@ -46,6 +39,8 @@ window.addEventListener("load", function() {
   }, 1000 / FPS)
 
   document.addEventListener("keydown", function(e) {
+    e.preventDefault()
+    window.scrollTo(0, 200)
     switch (true) {
       case e.code == LEFT && snake.direction != RIGHT: 
         snake.direction = LEFT
@@ -65,7 +60,6 @@ window.addEventListener("load", function() {
 
 function drawCanvas() {
   canvasContext.drawImage(canvasBackground, 0, 0, canvas.width, canvas.height)
-  // drawRectangle(0, 0, canvas.width, canvas.height, "green")
 }
 
 function drawMouse() {
@@ -92,19 +86,27 @@ function moveSnake() {
 
 function drawSnake() {
   snake.body.forEach((bodyPart, index) => {
-    drawRectangle(snake.body[index].x, snake.body[index].y, snake.size, snake.size, "#00d200")
+    if (index == 0) {
+      // drawCircle(snake.body[index].x+12, snake.body[index].y+12)
+      canvasContext.beginPath()
+      canvasContext.arc(snake.body[index].x+12, snake.body[index].y+12, GRID_UNIT, 0, 2 * Math.PI)
+      canvasContext.fillStyle = "#00d200"
+      canvasContext.fill()
+    } else {
+      drawRectangle(snake.body[index].x, snake.body[index].y, snake.size, snake.size, "#00d200")
+    }
     index++
   })
 }
 
 function checkSnakePosition() {
-  // snake touching canvas boundary?
+  // snake on canvas boundary?
   if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
     alert(`SNAKE ON BOUNDARY --Game Over -- Final Score: ${score}`)
     resetGame()
   }
 
-  // snake head touching body?
+  // snake on snake?
   for (i=1; i<snake.body.length; i++) {
     if (snake.body[0].x == snake.body[i].x && snake.body[0].y == snake.body[i].y) {
       alert(`SNAKE ON SNAKE -- Game Over -- Final Score: ${score}`)
@@ -112,7 +114,7 @@ function checkSnakePosition() {
     }
   }
 
-  // snake head touching mouse?
+  // snake on mouse?
   if (snake.body[0].x == mouse.x && snake.body[0].y == mouse.y) {
     resetMouse()
     document.getElementById("score").innerText = `Score: ${++score}`
@@ -142,6 +144,13 @@ function drawRectangle(x, y, width, height, color) {
   canvasContext.fillRect(x, y, width, height, color)
 }
 
+// function drawCirle(x, y) {
+//   canvasContext.beginPath()
+//   canvasContext.arc(x, y, GRID_UNIT, 0, 2 * Math.PI)
+//   canvasContext.fillStyle = "#00d200"
+//   canvasContext.fill()
+// }
+
 function resetMouse() {
   let mouseX = Math.round((Math.random() * (canvas.width-mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
   let mouseY = Math.round((Math.random() * (canvas.height-mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
@@ -157,14 +166,17 @@ function resetMouse() {
 }
 
 function resetGame() {
-  snake.body = [
-    {x: canvas.width/3, y: canvas.height/2},
-    {x: canvas.width/3-GRID_UNIT, y: canvas.height/2},
-    {x: canvas.width/3-GRID_UNIT*2, y: canvas.height/2},
-    {x: canvas.width/3-GRID_UNIT*3, y: canvas.height/2}
-  ]
+  snake.body = makeStartingBody(10)
   snake.direction = null
   resetMouse()
   score = 0
   document.getElementById("score").innerText = `Score: ${score}`
+}
+
+function makeStartingBody(length) {
+  arrayForSnakeBody = []
+  for (i=1; i<length; i++) {
+    arrayForSnakeBody.push({x: canvas.width/3-GRID_UNIT*i, y: canvas.height/2}) 
+  }
+  return arrayForSnakeBody
 }
