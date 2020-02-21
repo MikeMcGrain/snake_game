@@ -8,19 +8,19 @@ const canvasContext = canvas.getContext("2d")
 const canvasBackground = new Image()
 canvasBackground.src = "images/grass-background2.jpg"
 
-
-const GRID_UNIT = 25
 const LEFT = "ArrowLeft"
 const UP = "ArrowUp"
 const RIGHT = "ArrowRight"
 const DOWN = "ArrowDown"
+
+const GRID_UNIT = 25
 const STARTING_BODY_LENGTH = 16
+
 const snake = {
   size: 25,
   direction: null,
   body: makeStartingBody(STARTING_BODY_LENGTH)
 }
-
 const snakeHeadImage = new Image()
 snakeHeadImage.src = "images/snake_head2.webp"
 
@@ -89,10 +89,9 @@ function moveSnake() {
 }
 
 function drawSnake() {
-  let overlap = 0
   snake.body.forEach((bodyPart, index) => {
     if (index >= 1 && index < snake.body.length-3) {
-      drawSnakeBody(snake.body[index].x, snake.body[index].y, snake.size, snake.size, "#a0cc2d")
+      drawSnakeBody(snake.body[index].x, snake.body[index].y)
     } else {
       drawSnakeTail(snake.body[index].x, snake.body[index].y)
     }
@@ -105,9 +104,9 @@ function drawSnakeHead() {
   canvasContext.drawImage(snakeHeadImage, snake.body[0].x-13, snake.body[0].y-10, 50, 50)
 }
 
-function drawSnakeBody(x, y, width, height, color) {
-  canvasContext.fillStyle = color
-  canvasContext.fillRect(x, y, width, height, color)
+function drawSnakeBody(x, y) {
+  canvasContext.fillStyle = "#a0cc2d"
+  canvasContext.fillRect(x, y, snake.size, snake.size)
 }
 
 function drawSnakeTail(x, y) {
@@ -118,7 +117,7 @@ function drawSnakeTail(x, y) {
 }
 
 function checkSnakePosition() {
-  // snake on canvas boundary?
+  // snake off canvas?
   if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
     alert(`SNAKE ON BOUNDARY --Game Over -- Final Score: ${score}`)
     resetGame()
