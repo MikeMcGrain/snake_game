@@ -89,11 +89,13 @@ function moveSnake() {
 }
 
 function drawSnake() {
+  let rattleSize = 20
   snake.body.forEach((bodyPart, index) => {
     if (index >= 1 && index < snake.body.length-3) {
       drawSnakeBody(snake.body[index].x, snake.body[index].y)
     } else {
-      drawSnakeTail(snake.body[index].x, snake.body[index].y)
+      rattleSize -= 2
+      drawSnakeTail(snake.body[index].x, snake.body[index].y, rattleSize)
     }
     index++
   })
@@ -109,9 +111,9 @@ function drawSnakeBody(x, y) {
   canvasContext.fillRect(x, y, snake.size, snake.size)
 }
 
-function drawSnakeTail(x, y) {
+function drawSnakeTail(x, y, rattleSize) {
   canvasContext.beginPath()
-  canvasContext.arc(x + 12, y + 12, 15, 0, 2 * Math.PI)
+  canvasContext.arc(x + 12, y + 12, rattleSize, 0, 2 * Math.PI)
   canvasContext.fillStyle = "#b37700"
   canvasContext.fill()
 }
