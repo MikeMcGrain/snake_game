@@ -23,6 +23,8 @@ const snake = {
 }
 const snakeHeadImage = new Image()
 snakeHeadImage.src = "images/snake_head2.webp"
+const snakeGulp = new Audio("audio/gulp.mp3")
+const impact = new Audio("audio/impact.mp3")
 
 const mouse = {
   size: 25,
@@ -121,6 +123,7 @@ function drawSnakeTail(x, y, rattleSize) {
 function checkSnakePosition() {
   // snake off canvas?
   if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
+    impact.play()
     alert(`SNAKE ON BOUNDARY --Game Over -- Final Score: ${score}`)
     resetGame()
   }
@@ -128,6 +131,7 @@ function checkSnakePosition() {
   // snake on snake?
   for (i = 1; i < snake.body.length; i++) {
     if (snake.body[0].x == snake.body[i].x && snake.body[0].y == snake.body[i].y) {
+      impact.play()
       alert(`SNAKE ON SNAKE -- Game Over -- Final Score: ${score}`)
       resetGame()
     }
@@ -135,6 +139,7 @@ function checkSnakePosition() {
 
   // snake on mouse?
   if (snake.body[0].x == mouse.x && snake.body[0].y == mouse.y) {
+    snakeGulp.play()
     resetMouse()
     document.getElementById("score").innerText = `Score: ${++score}`
 
