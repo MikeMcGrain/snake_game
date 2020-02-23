@@ -2,8 +2,8 @@ let score = 0
 document.getElementById("score").innerText = `Score: ${score}`
 
 const canvas = document.getElementById("canvas")
-canvas.width = 600
-canvas.height = 400
+canvas.width = 1200
+canvas.height = 800
 const canvasContext = canvas.getContext("2d")
 const canvasBackground = new Image()
 canvasBackground.src = "images/grass-background2.jpg"
@@ -14,7 +14,7 @@ const RIGHT = "ArrowRight"
 const DOWN = "ArrowDown"
 
 const GRID_UNIT = 25
-const STARTING_BODY_LENGTH = 25
+const STARTING_BODY_LENGTH = 16
 
 const snake = {
   size: 25,
@@ -35,7 +35,7 @@ const mouseImage = new Image()
 mouseImage.src = "images/rodent.svg"
 
 window.addEventListener("load", function() {
-  const FPS = 5
+  const FPS = 10
   setInterval(() => {
     drawCanvas()
     drawMouse()
@@ -158,21 +158,19 @@ function checkSnakePosition() {
 function resetMouse() {
   let mouseX = Math.round((Math.random() * (canvas.width - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
   let mouseY = Math.round((Math.random() * (canvas.height - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
-  console.log("randomMouseX: " + mouseX)
-  console.log("randomMouseY: " + mouseY)
-  snake.body.forEach((bodyPart, index) => {
-    if (mouseX == snake.body[index].x && mouseY == snake.body[index].y) {
-      console.log("SNAKE!!! snake.body[" + index + "]: " + snake.body[index].x)
-      console.log("SNAKE!!! snake.body[" + index + "]: " + snake.body[index].y)
-      resetMouse()     
-    } else {
-      index++
-    }
-  })
+
+  const mouseIsPlacedOnSnakePart = () => {
+    return snake.body.filter(bodyPart => bodyPart.x === mouseX && bodyPart.y === mouseY).length > 0;
+  }
+
+  while(mouseIsPlacedOnSnakePart()) {
+    console.log("this seat is taken, get a new one")
+    mouseX = Math.round((Math.random() * (canvas.width - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
+    mouseY = Math.round((Math.random() * (canvas.height - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
+  }
+  
   mouse.x = mouseX
   mouse.y = mouseY
-  console.log("set mouse.x: " + mouse.x)
-  console.log("set mouse.y: " + mouse.y)
 }
 
 function resetGame() {
