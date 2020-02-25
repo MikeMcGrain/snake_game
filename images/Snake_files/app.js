@@ -6,7 +6,7 @@ canvasBackground.src = "images/grass-background3.jpeg"
 const canvasContext = canvas.getContext("2d")
 
 const GRID_UNIT = 25
-const FRAMES_PER_SECOND = 10
+const FRAMES_PER_SECOND = 2
 const STARTING_BODY_LENGTH = 15
 
 const LEFT = "ArrowLeft"
@@ -67,7 +67,7 @@ function drawCanvas() {
 }
 
 function drawMouse() {
-  canvasContext.drawImage(mouse.image, mouse.x-3, mouse.y-5, mouse.size, mouse.size)
+  canvasContext.drawImage(mouse.image, mouse.x-3, mouse.y-10, mouse.size, mouse.size)
 }
 
 function moveSnake() {

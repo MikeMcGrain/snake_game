@@ -4,9 +4,9 @@ body {
 }
 
 @font-face {
-    font-family: snake-eyes-font;
-    src: url(fonts/snake-eyes.ttf);
-  }
+  font-family: snake-eyes-font;
+  src: url(fonts/snake-eyes.ttf);
+}
 
 #title {
   font-family: snake-eyes-font;
@@ -16,11 +16,10 @@ body {
 }
 
 #score::before {
-
-    background-image: url('images/rodent.svg');
-    background-size: 40px 40px;
-    display: inline-block;
-    width: 40px; 
-    height: 40px;
-    content:"";
+  background-image: url("images/rodent.svg");
+  background-size: 40px 40px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  content: "";
 }
