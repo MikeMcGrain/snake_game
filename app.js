@@ -17,10 +17,12 @@ const DOWN = "ArrowDown"
 const snake = {
   headImage: new Image(),
   headSize: 50,
-  bodySize: GRID_UNIT,
-  rattleSize: 20,
-  direction: null,
   body: makeStartingBody(STARTING_BODY_LENGTH),
+  bodySize: GRID_UNIT,
+  bodyColor: "#a0cc2d",
+  rattleSize: 20,
+  rattleColor: "#b37700",
+  direction: null,
   gulp: new Audio("audio/gulp.mp3"),
   crash: new Audio("audio/impact.mp3")
 }
@@ -89,17 +91,12 @@ function moveSnake() {
 }
 
 function drawSnake() {
-  let rattleSize = 20
+  let rattleSize = snake.rattleSize
+
   snake.body.forEach((bodyPart, index) => {
-    if (index >= 1 && index < snake.body.length-3) {
-      drawSnakeBody(snake.body[index].x, snake.body[index].y)
-    } else {
-      if (index > 0){
-        rattleSize -= 2
-        drawSnakeTail(snake.body[index].x, snake.body[index].y, rattleSize)
-      }
-      
-    }
+    (index > 0 && index < snake.body.length-3) 
+      ? drawSnakeBody(snake.body[index].x, snake.body[index].y) 
+      : (rattleSize -= 2, drawSnakeRattle(snake.body[index].x, snake.body[index].y, rattleSize))
     index++
   })
   drawSnakeHead()
@@ -110,14 +107,14 @@ function drawSnakeHead() {
 }
 
 function drawSnakeBody(x, y) {
-  canvasContext.fillStyle = "#a0cc2d"
+  canvasContext.fillStyle = snake.bodyColor
   canvasContext.fillRect(x, y, snake.bodySize, snake.bodySize)
 }
 
-function drawSnakeTail(x, y, rattleSize) {
+function drawSnakeRattle(x, y, rattleSize) {
   canvasContext.beginPath()
   canvasContext.arc(x + 12, y + 12, rattleSize, 0, 2 * Math.PI)
-  canvasContext.fillStyle = "#b37700"
+  canvasContext.fillStyle = snake.rattleColor
   canvasContext.fill()
 }
 
