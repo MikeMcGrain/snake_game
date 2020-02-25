@@ -1,7 +1,6 @@
 body {
   text-align: center;
-  background-color: black;
-  color: #00d200;
+  background: linear-gradient(to bottom, white, #2db9cc);
 }
 
 @font-face {
@@ -9,8 +8,19 @@ body {
     src: url(fonts/snake-eyes.ttf);
   }
 
-p {
+#title {
   font-family: snake-eyes-font;
   font-size: 10vw;
+  color: darkgreen;
   margin: 0;
+}
+
+#score::before {
+
+    background-image: url('images/rodent.svg');
+    background-size: 40px 40px;
+    display: inline-block;
+    width: 40px; 
+    height: 40px;
+    content:"";
 }
