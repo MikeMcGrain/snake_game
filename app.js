@@ -42,7 +42,7 @@ window.addEventListener("load", function() {
     drawMouse()
     moveSnake()
     drawSnake()
-    checkSnakePosition()
+    checkSnakePositions()
   }, 1000 / FRAMES_PER_SECOND)
 
   document.addEventListener("keydown", function(e) {
@@ -92,7 +92,6 @@ function moveSnake() {
 
 function drawSnake() {
   let rattleSize = snake.rattleSize
-
   snake.body.forEach((bodyPart, index) => {
     (index > 0 && index < snake.body.length-3) 
       ? drawSnakeBody(snake.body[index].x, snake.body[index].y) 
@@ -118,11 +117,11 @@ function drawSnakeRattle(x, y, rattleSize) {
   canvasContext.fill()
 }
 
-function checkSnakePosition() {
+function checkSnakePositions() {
   // snake off canvas?
   if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
     snake.crash.play()
-    alert(`Game Over`)
+    alert("Game Over")
     resetGame()
   }
 
@@ -138,7 +137,8 @@ function checkSnakePosition() {
   // snake on mouse?
   if (snake.body[0].x === mouse.x && snake.body[0].y === mouse.y) {
     snake.gulp.play()
-    resetMouse()
+    moveMouse()
+    
     const xOfCurrentTail = snake.body[snake.body.length-1].x
     const yOfCurrentTail = snake.body[snake.body.length-1].y
     switch (snake.direction) {
@@ -151,7 +151,7 @@ function checkSnakePosition() {
   }
 }
 
-function resetMouse() {
+function moveMouse() {
   let mouseX = Math.round((Math.random() * (canvas.width - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
   let mouseY = Math.round((Math.random() * (canvas.height - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
 
@@ -170,7 +170,8 @@ function resetMouse() {
 function resetGame() {
   snake.body = makeStartingBody(STARTING_BODY_LENGTH)
   snake.direction = null
-  resetMouse()
+  mouse.x = canvas.width/3*2
+  mouse.y = canvas.height/2
   setScore(0)
 }
 
