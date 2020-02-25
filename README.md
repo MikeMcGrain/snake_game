@@ -14,7 +14,9 @@ Play it [here](https://mikemcgrain.github.io/snake_game/)
 
 ## Summary
 
-First time delving in to graphics programming....
+This was my first dive into graphics programming.  Although a bit tedious at first, I can see the possiblities.
+
+The movement of the snake body was certainly the most challeging part of this game.  It took me some time to translate "follow the body part in front of you" into a JavaScript algorithm.  There are a few more tweaks that I think could make the game-play a little more interestesing; but, for now, it's fun to just gulp up a few mice.
 
 ## Author
 
