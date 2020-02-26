@@ -6,7 +6,7 @@ canvasBackground.src = "images/grass-background3.jpeg"
 const canvasContext = canvas.getContext("2d")
 
 const GRID_UNIT = 25
-const FRAMES_PER_SECOND = 10
+const FRAMES_PER_SECOND = 11
 const STARTING_BODY_LENGTH = 15
 
 const LEFT = "ArrowLeft"
@@ -46,6 +46,7 @@ window.addEventListener("load", function() {
   }, 1000 / FRAMES_PER_SECOND)
 
   document.addEventListener("keydown", function(e) {
+    e.preventDefault()
     switch (true) {
       case e.code === LEFT && snake.direction !== RIGHT:
         snake.direction = LEFT

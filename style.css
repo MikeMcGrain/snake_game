@@ -23,11 +23,11 @@ body {
 
 #score::before {
   background-image: url("images/rodent.svg");
-  background-size: 4vw 4vw;
+  background-size: 3vw 3vw;
   background-repeat: no-repeat;
   display: inline-block;
-  width: 4vw;
-  height: 4vw;
+  width: 3vw;
+  height: 3vw;
   content: "";
 }
 
@@ -39,10 +39,10 @@ body {
 #best-score::before {
   background-image: url("images/trophy.png");
   background-repeat: no-repeat;
-  background-size: 4vw 4vw;
+  background-size: 3vw 3vw;
   display: inline-block;
-  width: 4vw;
-  height: 4vw;
+  width: 3vw;
+  height: 3vw;
   content: "";
 }
 
