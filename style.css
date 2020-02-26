@@ -23,3 +23,12 @@ body {
   height: 40px;
   content: "";
 }
+
+#best-score::before {
+  background-image: url("images/trophy.png");
+  background-size: 40px 40px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  content: "";
+}

@@ -62,6 +62,7 @@ window.addEventListener("load", function() {
     }
   })
   setScore(0)
+  checkHighScore()
 })
 
 function drawCanvas() {
@@ -122,6 +123,7 @@ function checkSnakePositions() {
   if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
     snake.crash.play()
     alert("Game Over")
+    checkHighScore()
     resetGame()
   }
 
@@ -130,6 +132,7 @@ function checkSnakePositions() {
     if (snake.body[0].x === snake.body[i].x && snake.body[0].y === snake.body[i].y) {
       snake.crash.play()
       alert("Game Over")
+      checkHighScore()
       resetGame()
     }
   }
@@ -172,7 +175,19 @@ function resetGame() {
   snake.direction = null
   mouse.x = canvas.width/3*2
   mouse.y = canvas.height/2
+  
   setScore(0)
+}
+
+function checkHighScore() {
+  let currentScore = parseInt(document.getElementById("score").innerText)
+  let previousHighScore = parseInt(localStorage.getItem("best_score")) || 0
+  if (currentScore > previousHighScore) {
+    document.getElementById("best-score").innerText = currentScore
+    localStorage.setItem("best_score", JSON.parse(currentScore))
+  } else {
+    document.getElementById("best-score").innerText = previousHighScore
+  }
 }
 
 function setScore(num) {
