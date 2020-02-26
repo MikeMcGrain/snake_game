@@ -10,7 +10,7 @@ Play it [here](https://mikemcgrain.github.io/snake_game/)
 
 <br>
 
-<image src="images/screenshot.png">
+<image src="images/screenshot2.png">
 
 ## Summary
 
