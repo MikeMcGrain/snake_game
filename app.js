@@ -61,8 +61,7 @@ window.addEventListener("load", function() {
         break
     }
   })
-  setScore(0)
-  checkHighScore()
+  updateScores(0)
 })
 
 function drawCanvas() {
@@ -132,7 +131,7 @@ function checkSnakePositions() {
       case RIGHT: snake.body.push({x: xOfCurrentTail - snake.bodySize, y: yOfCurrentTail}); break
       case DOWN: snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail - snake.bodySize}); break
     }
-    setScore(1)
+    updateScores(1)
   }
 
   // snake off canvas?
@@ -168,12 +167,22 @@ function moveMouse() {
   mouse.y = mouseY
 }
 
-function setScore(num) {
+function updateScores(num) {
+  let currentScore = parseInt(document.getElementById("score").innerText)
+  let previousHighScore = parseInt(localStorage.getItem("best_score")) || 0
+
   if (num === 0) {
     document.getElementById("score").innerText = 0
   } else {
-    let score = document.getElementById("score").innerText 
-    document.getElementById("score").innerText = parseInt(score) + num
+    currentScore += num
+    document.getElementById("score").innerText = currentScore
+  }
+  
+  if (currentScore > previousHighScore) {
+    document.getElementById("best-score").innerText = currentScore
+    localStorage.setItem("best_score", JSON.parse(currentScore))
+  } else {
+    document.getElementById("best-score").innerText = previousHighScore
   }
 }
 
@@ -182,19 +191,7 @@ function resetGame() {
   snake.direction = null
   mouse.x = canvas.width/3*2
   mouse.y = canvas.height/2
-  checkHighScore()
-  setScore(0)
-}
-
-function checkHighScore() {
-  let currentScore = parseInt(document.getElementById("score").innerText)
-  let previousHighScore = parseInt(localStorage.getItem("best_score")) || 0
-  if (currentScore > previousHighScore) {
-    document.getElementById("best-score").innerText = currentScore
-    localStorage.setItem("best_score", JSON.parse(currentScore))
-  } else {
-    document.getElementById("best-score").innerText = previousHighScore
-  }
+  updateScores(0)
 }
 
 function makeStartingBody(length) {
