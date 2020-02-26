@@ -10,25 +10,43 @@ body {
 
 #title {
   font-family: snake-eyes-font;
-  font-size: 10vw;
+  font-size: 12vw;
   color: darkgreen;
   margin: 0;
 }
 
+#score {
+  display: inline;
+  margin-right: 400px;
+  font-size: 3vw;
+}
+
 #score::before {
   background-image: url("images/rodent.svg");
-  background-size: 40px 40px;
+  background-size: 4vw 4vw;
+  background-repeat: no-repeat;
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  width: 4vw;
+  height: 4vw;
   content: "";
+}
+
+#best-score {
+  display: inline;
+  font-size: 3vw;
 }
 
 #best-score::before {
   background-image: url("images/trophy.png");
-  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-size: 4vw 4vw;
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  width: 4vw;
+  height: 4vw;
   content: "";
+}
+
+canvas {
+  margin: auto;
+  display: block;
 }
