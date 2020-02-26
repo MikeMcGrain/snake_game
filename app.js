@@ -102,10 +102,6 @@ function drawSnake() {
   drawSnakeHead()
 }
 
-function drawSnakeHead() {
-  canvasContext.drawImage(snake.headImage, snake.body[0].x-13, snake.body[0].y-13, snake.headSize, snake.headSize)
-}
-
 function drawSnakeBody(x, y) {
   canvasContext.fillStyle = snake.bodyColor
   canvasContext.fillRect(x, y, snake.bodySize, snake.bodySize)
@@ -118,25 +114,11 @@ function drawSnakeRattle(x, y, rattleSize) {
   canvasContext.fill()
 }
 
+function drawSnakeHead() {
+  canvasContext.drawImage(snake.headImage, snake.body[0].x-13, snake.body[0].y-13, snake.headSize, snake.headSize)
+}
+
 function checkSnakePositions() {
-  // snake off canvas?
-  if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
-    snake.crash.play()
-    alert("Game Over")
-    checkHighScore()
-    resetGame()
-  }
-
-  // snake on snake?
-  for (i = 1; i < snake.body.length; i++) {
-    if (snake.body[0].x === snake.body[i].x && snake.body[0].y === snake.body[i].y) {
-      snake.crash.play()
-      alert("Game Over")
-      checkHighScore()
-      resetGame()
-    }
-  }
-
   // snake on mouse?
   if (snake.body[0].x === mouse.x && snake.body[0].y === mouse.y) {
     snake.gulp.play()
@@ -151,6 +133,22 @@ function checkSnakePositions() {
       case DOWN: snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail - snake.bodySize}); break
     }
     setScore(1)
+  }
+
+  // snake off canvas?
+  if (snake.body[0].x < 0 || snake.body[0].x >= canvas.width || snake.body[0].y < 0 || snake.body[0].y >= canvas.height) {
+    snake.crash.play()
+    alert("Game Over")
+    resetGame()
+  }
+
+  // snake on snake?
+  for (i = 1; i < snake.body.length; i++) {
+    if (snake.body[0].x === snake.body[i].x && snake.body[0].y === snake.body[i].y) {
+      snake.crash.play()
+      alert("Game Over")
+      resetGame()
+    }
   }
 }
 
@@ -170,12 +168,21 @@ function moveMouse() {
   mouse.y = mouseY
 }
 
+function setScore(num) {
+  if (num === 0) {
+    document.getElementById("score").innerText = 0
+  } else {
+    let score = document.getElementById("score").innerText 
+    document.getElementById("score").innerText = parseInt(score) + num
+  }
+}
+
 function resetGame() {
   snake.body = makeStartingBody(STARTING_BODY_LENGTH)
   snake.direction = null
   mouse.x = canvas.width/3*2
   mouse.y = canvas.height/2
-  
+  checkHighScore()
   setScore(0)
 }
 
@@ -187,15 +194,6 @@ function checkHighScore() {
     localStorage.setItem("best_score", JSON.parse(currentScore))
   } else {
     document.getElementById("best-score").innerText = previousHighScore
-  }
-}
-
-function setScore(num) {
-  if (num === 0) {
-    document.getElementById("score").innerText = 0
-  } else {
-    let score = document.getElementById("score").innerText 
-    document.getElementById("score").innerText = parseInt(score) + num
   }
 }
 
