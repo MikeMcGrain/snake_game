@@ -1,11 +1,13 @@
+body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background: linear-gradient(to bottom, white, #2db9cc);
+}
+
 @font-face {
   font-family: snake-eyes-font;
   src: url(fonts/snake-eyes.ttf);
-}
-
-body {
-  text-align: center;
-  background: linear-gradient(to bottom, white, #2db9cc);
 }
 
 #title {
@@ -15,10 +17,13 @@ body {
   margin: 0;
 }
 
+div {
+  display: flex;
+}
+
 #score {
-  display: inline;
-  margin-right: 400px;
   font-size: 3vw;
+  margin: 0 200px 0 0;
 }
 
 #score::before {
@@ -32,7 +37,7 @@ body {
 }
 
 #best-score {
-  display: inline;
+  margin: 0;
   font-size: 3vw;
 }
 
@@ -44,9 +49,4 @@ body {
   width: 3vw;
   height: 3vw;
   content: "";
-}
-
-canvas {
-  margin: auto;
-  display: block;
 }
