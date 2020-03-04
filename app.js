@@ -8,6 +8,7 @@ const LEFT = "ArrowLeft"
 const UP = "ArrowUp"
 const RIGHT = "ArrowRight"
 const DOWN = "ArrowDown"
+const SPACE = "Space"
 
 const snake = new Snake(STARTING_BODY_LENGTH, GRID_UNIT, CANVAS_WIDTH / 3, CANVAS_HEIGHT / 2)
 const mouse = new Mouse(CANVAS_WIDTH / 3 *2, CANVAS_HEIGHT / 2)
@@ -42,6 +43,9 @@ window.addEventListener("load", function() {
         break
       case e.code === DOWN && snake.direction !== UP:
         snake.direction = DOWN
+        break
+      case e.code === SPACE:
+        snake.pause()
         break
     }
   })
