@@ -1,11 +1,6 @@
-const canvas = document.getElementById("canvas")
-canvas.width = 600
-canvas.height = 600
-const canvasBackground = new Image()
-canvasBackground.src = "images/grass-background3.jpeg"
-const canvasContext = canvas.getContext("2d")
-
 const GRID_UNIT = 25
+const CANVAS_WIDTH = 600
+const CANVAS_HEIGHT = 600
 const FRAMES_PER_SECOND = 11
 const STARTING_BODY_LENGTH = 15
 
@@ -14,34 +9,22 @@ const UP = "ArrowUp"
 const RIGHT = "ArrowRight"
 const DOWN = "ArrowDown"
 
-const snake = {
-  headImage: new Image(),
-  headSize: 50,
-  body: makeStartingBody(STARTING_BODY_LENGTH),
-  bodySize: GRID_UNIT,
-  bodyColor: "#a0cc2d",
-  rattleSize: 20,
-  rattleColor: "#b37700",
-  direction: null,
-  gulp: new Audio("audio/gulp.mp3"),
-  crash: new Audio("audio/impact.mp3")
-}
-snake.headImage.src = "images/snake_head2.webp"
-
-const mouse = {
-  image: new Image(),
-  size: 30,
-  x: canvas.width/3*2,
-  y: canvas.height/2
-}
-mouse.image.src = "images/rodent.svg"
+const snake = new Snake(STARTING_BODY_LENGTH, GRID_UNIT, CANVAS_WIDTH / 3, CANVAS_HEIGHT / 2)
+const mouse = new Mouse(CANVAS_WIDTH / 3 *2, CANVAS_HEIGHT / 2)
 
 window.addEventListener("load", function() {
+  const canvas = document.getElementById("canvas")
+  canvas.width = CANVAS_WIDTH
+  canvas.height = CANVAS_HEIGHT
+  const canvasBackground = new Image()
+  canvasBackground.src = "images/grass-background3.jpeg"
+  const canvasContext = canvas.getContext("2d")
+
   setInterval(() => {
-    drawCanvas()
-    drawMouse()
-    moveSnake()
-    drawSnake()
+    drawCanvas(canvasContext, canvasBackground)
+    drawMouse(canvasContext)
+    moveSnake(canvasContext)
+    drawSnake(canvasContext)
     checkSnakePositions()
   }, 1000 / FRAMES_PER_SECOND)
 
@@ -65,11 +48,11 @@ window.addEventListener("load", function() {
   updateScores(0)
 })
 
-function drawCanvas() {
-  canvasContext.drawImage(canvasBackground, 0, 0, canvas.width, canvas.height)
+function drawCanvas(canvasContext, canvasBackground) {
+  canvasContext.drawImage(canvasBackground, 0, 0, canvasContext.canvas.width, canvasContext.canvas.height)
 }
 
-function drawMouse() {
+function drawMouse(canvasContext) {
   canvasContext.drawImage(mouse.image, mouse.x-3, mouse.y-5, mouse.size, mouse.size)
 }
 
@@ -91,30 +74,30 @@ function moveSnake() {
   }
 }
 
-function drawSnake() {
+function drawSnake(canvasContext) {
   let rattleSize = snake.rattleSize
   snake.body.forEach((bodyPart, index) => {
     (index > 0 && index < snake.body.length-3) 
-      ? drawSnakeBody(snake.body[index].x, snake.body[index].y) 
-      : (rattleSize -= 2, drawSnakeRattle(snake.body[index].x, snake.body[index].y, rattleSize))
+      ? drawSnakeBody(snake.body[index].x, snake.body[index].y, canvasContext) 
+      : (rattleSize -= 2, drawSnakeRattle(snake.body[index].x, snake.body[index].y, rattleSize, canvasContext))
     index++
   })
-  drawSnakeHead()
+  drawSnakeHead(canvasContext)
 }
 
-function drawSnakeBody(x, y) {
+function drawSnakeBody(x, y, canvasContext) {
   canvasContext.fillStyle = snake.bodyColor
   canvasContext.fillRect(x, y, snake.bodySize, snake.bodySize)
 }
 
-function drawSnakeRattle(x, y, rattleSize) {
+function drawSnakeRattle(x, y, rattleSize, canvasContext) {
   canvasContext.beginPath()
   canvasContext.arc(x + 12, y + 12, rattleSize, 0, 2 * Math.PI)
   canvasContext.fillStyle = snake.rattleColor
   canvasContext.fill()
 }
 
-function drawSnakeHead() {
+function drawSnakeHead(canvasContext) {
   canvasContext.drawImage(snake.headImage, snake.body[0].x-13, snake.body[0].y-13, snake.headSize, snake.headSize)
 }
 
@@ -188,20 +171,9 @@ function updateScores(num) {
 }
 
 function resetGame() {
-  snake.body = makeStartingBody(STARTING_BODY_LENGTH)
-  snake.direction = null
+  snake.resetStartingBody(STARTING_BODY_LENGTH, CANVAS_WIDTH / 3, CANVAS_HEIGHT /2)
+  snake.pause()
   mouse.x = canvas.width/3*2
   mouse.y = canvas.height/2
   updateScores(0)
-}
-
-function makeStartingBody(length) {
-  arrayForSnakeBody = []
-  for (i=1; i<length; i++) {
-    arrayForSnakeBody.push({
-      x: canvas.width / 3 - GRID_UNIT * i,
-      y: canvas.height / 2
-    })
-  }
-  return arrayForSnakeBody
 }
