@@ -24,7 +24,7 @@ window.addEventListener("load", function() {
   setInterval(() => {
     drawCanvas(canvasContext, canvasBackground)
     drawMouse(canvasContext, mouse)
-    moveSnake(snake)
+    snake.move()
     drawSnake(canvasContext, snake)
     checkSnakePositions(snake, mouse)
   }, 1000 / FRAMES_PER_SECOND)
@@ -60,24 +60,6 @@ function drawMouse(canvasContext, mouse) {
   canvasContext.drawImage(mouse.image, mouse.x, mouse.y, mouse.size, mouse.size)
 }
 
-function moveSnake(snake) {
-  const copyOfSnakeBody = snake.body.map(bodyPart => {
-    return {x: bodyPart.x, y: bodyPart.y}
-  })
-
-  switch (snake.direction) {
-    case RIGHT: snake.body[0].x += 25; break
-    case LEFT: snake.body[0].x -= 25; break
-    case UP: snake.body[0].y -= 25; break
-    case DOWN: snake.body[0].y += 25; break
-    default: return
-  }
-
-  for (i=1; i<snake.body.length; i++) {
-    snake.body[i] = {x: copyOfSnakeBody[i-1].x, y: copyOfSnakeBody[i-1].y}
-  }
-}
-
 function drawSnake(canvasContext, snake) {
   let rattleSize = snake.rattleSize
   snake.body.forEach((bodyPart, index) => {
@@ -109,50 +91,22 @@ function checkSnakePositions(snake, mouse) {
   // snake on mouse?
   if (snake.body[0].x === mouse.x && snake.body[0].y === mouse.y) {
     snake.gulp.play()
-    moveMouse(mouse, snake)
-    
-    const xOfCurrentTail = snake.body[snake.body.length-1].x
-    const yOfCurrentTail = snake.body[snake.body.length-1].y
-    switch (snake.direction) {
-      case LEFT: snake.body.push({x: xOfCurrentTail + snake.bodySize, y: yOfCurrentTail}); break
-      case UP: snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail + snake.bodySize}); break
-      case RIGHT: snake.body.push({x: xOfCurrentTail - snake.bodySize, y: yOfCurrentTail}); break
-      case DOWN: snake.body.push({x: xOfCurrentTail, y: yOfCurrentTail - snake.bodySize}); break
-    }
+    mouse.move(snake, mouse, GRID_UNIT, CANVAS_WIDTH, CANVAS_HEIGHT)
+    snake.grow(snake.body[snake.body.length-1].x, snake.body[snake.body.length-1].y)
     updateScores(1)
   }
 
   // snake off canvas?
   if (snake.body[0].x < 0 || snake.body[0].x >= CANVAS_WIDTH || snake.body[0].y < 0 || snake.body[0].y >= CANVAS_HEIGHT) {
-    snake.crash.play()
-    alert("Game Over")
     resetGame(snake,mouse)
   }
 
   // snake on snake?
   for (i = 1; i < snake.body.length; i++) {
     if (snake.body[0].x === snake.body[i].x && snake.body[0].y === snake.body[i].y) {
-      snake.crash.play()
-      alert("Game Over")
       resetGame(snake, mouse)
     }
   }
-}
-
-function moveMouse(mouse, snake) {
-  let mouseX = Math.round((Math.random() * (canvas.width - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
-  let mouseY = Math.round((Math.random() * (canvas.height - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
-
-  const mouseIsPlacedOnSnakePart = () => {
-    return snake.body.filter(bodyPart => bodyPart.x === mouseX && bodyPart.y === mouseY).length > 0;
-  }
-
-  while(mouseIsPlacedOnSnakePart()) {
-    mouseX = Math.round((Math.random() * (canvas.width - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
-    mouseY = Math.round((Math.random() * (canvas.height - mouse.size - 0) + 0) / GRID_UNIT) * GRID_UNIT
-  }
-  mouse.x = mouseX
-  mouse.y = mouseY
 }
 
 function updateScores(num) {
@@ -175,9 +129,10 @@ function updateScores(num) {
 }
 
 function resetGame(snake, mouse) {
-  snake.resetStartingBody(STARTING_BODY_LENGTH, CANVAS_WIDTH / 3, CANVAS_HEIGHT /2)
+  snake.crash.play()
+  alert("Game Over")
   snake.pause()
-  mouse.x = CANVAS_WIDTH/3*2
-  mouse.y = CANVAS_HEIGHT/2
+  snake.resetStartingBody(STARTING_BODY_LENGTH, CANVAS_WIDTH / 3, CANVAS_HEIGHT /2)
+  mouse.resetStartingPosition(CANVAS_WIDTH/3*2, CANVAS_HEIGHT/2)
   updateScores(0)
 }

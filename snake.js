@@ -15,6 +15,41 @@ class Snake {
     this.resetStartingBody(startingLength, startingX, startingY)
   }
 
+  move() {
+    const copyOfSnakeBody = this.body.map(bodyPart => {
+      return {x: bodyPart.x, y: bodyPart.y}
+    })
+  
+    switch (this.direction) {
+      case RIGHT: this.body[0].x += 25; break
+      case LEFT: this.body[0].x -= 25; break
+      case UP: this.body[0].y -= 25; break
+      case DOWN: this.body[0].y += 25; break
+      default: return
+    }
+  
+    for (i=1; i<this.body.length; i++) {
+      this.body[i] = {x: copyOfSnakeBody[i-1].x, y: copyOfSnakeBody[i-1].y}
+    }
+  }
+
+  grow(xOfCurrentTail, yOfCurrentTail) {
+    switch (this.direction) {
+      case LEFT:
+        this.body.push({ x: xOfCurrentTail + this.bodySize, y: yOfCurrentTail })
+        break
+      case UP:
+        this.body.push({ x: xOfCurrentTail, y: yOfCurrentTail + this.bodySize })
+        break
+      case RIGHT:
+        this.body.push({ x: xOfCurrentTail - this.bodySize, y: yOfCurrentTail })
+        break
+      case DOWN:
+        this.body.push({ x: xOfCurrentTail, y: yOfCurrentTail - this.bodySize })
+        break
+    }
+  }
+
   resetStartingBody(length, startingX, startingY) {
     const arrayForSnakeBody = []
     for (let i = 1; i < length; i++) {
