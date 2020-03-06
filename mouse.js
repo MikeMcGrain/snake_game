@@ -1,4 +1,4 @@
-class Mouse {
+export default class Mouse {
   constructor(x, y) {
     this.image = new Image()
     this.image.src = "images/rodent.svg"

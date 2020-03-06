@@ -1,3 +1,6 @@
+import Snake from './snake.js'
+import Mouse from "./mouse.js"
+
 const GRID_UNIT = 25
 const CANVAS_WIDTH = 600
 const CANVAS_HEIGHT = 600
@@ -102,7 +105,7 @@ function checkSnakePositions(snake, mouse) {
   }
 
   // snake on snake?
-  for (i = 1; i < snake.body.length; i++) {
+  for (let i = 1; i < snake.body.length; i++) {
     if (snake.body[0].x === snake.body[i].x && snake.body[0].y === snake.body[i].y) {
       resetGame(snake, mouse)
     }

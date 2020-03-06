@@ -1,4 +1,10 @@
-class Snake {
+const LEFT = "ArrowLeft"
+const UP = "ArrowUp"
+const RIGHT = "ArrowRight"
+const DOWN = "ArrowDown"
+const SPACE = "Space"
+
+export default class Snake {
   constructor(startingLength, gridUnit, startingX, startingY) {
     this.headImage = new Image()
     this.headImage.src = "images/snake_head2.webp"
@@ -28,7 +34,7 @@ class Snake {
       default: return
     }
   
-    for (i=1; i<this.body.length; i++) {
+    for (let i=1; i<this.body.length; i++) {
       this.body[i] = {x: copyOfSnakeBody[i-1].x, y: copyOfSnakeBody[i-1].y}
     }
   }
